@@ -15,11 +15,11 @@ const getAllConnected = (roomId) => {
    *
    */
   return Array.from(
-    io.sockets.adapter.rooms.get(roomId) || []
-  ).map((socketId) => {
+    io.sockets.adapter.rooms.get(roomId) || []).map((socketId) => {
     return {
       socketId,
       name: userSocketMap[socketId],
+      roomId: roomId
     };
   });
 };
@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
     socket.join(roomId);
     const clients = getAllConnected(roomId);
     console.log(clients);
-    clients.forEach((socketId) => {
+    clients.forEach(({socketId}) => {
       io.to(socketId).emit(ACTIONS.JOINED, {
         clients,
         name,
