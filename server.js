@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
       /**
        * return roomId, text, client
        */
-      io.to(roomId).emit(ACTIONS.TEXT_CHANGE, { roomId, text, client });
+      socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { roomId, text, client });
       console.log({ roomId, text, client });
     }
   );
