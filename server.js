@@ -45,6 +45,25 @@ io.on('connection', (socket) => {
     });
   });
   /**
+   * text change
+   * sync text
+   */
+  socket.on(
+    ACTIONS.TEXT_CHANGE,
+    ({ roomId, text, client }) => {
+      /**
+       * return roomId, text, client
+       */
+      io.to(roomId).emit(ACTIONS.TEXT_CHANGE, { roomId, text, client });
+      console.log({ roomId, text, client });
+    }
+  );
+
+  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, text }) => {
+    io.to(socketId).emit(ACTIONS.TEXT_CHANGE, { text });
+  });
+
+  /**
    * disconnect
    */
   socket.on('disconnecting', () => {
