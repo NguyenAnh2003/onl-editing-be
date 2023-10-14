@@ -50,17 +50,17 @@ io.on('connection', (socket) => {
    */
   socket.on(
     ACTIONS.TEXT_CHANGE,
-    ({ roomId, text, client }) => {
+    ({ roomId, delta, client }) => {
       /**
        * return roomId, text, client
        */
-      socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { roomId, text, client });
-      console.log({ roomId, text, client });
+      socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { roomId, delta, client });
+      console.log({ roomId, delta, client });
     }
   );
 
-  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, text }) => {
-    io.to(socketId).emit(ACTIONS.TEXT_CHANGE, { text });
+  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, delta }) => {
+    io.to(socketId).emit(ACTIONS.TEXT_CHANGE, { delta });
   });
 
   /**
