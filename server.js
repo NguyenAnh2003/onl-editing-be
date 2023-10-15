@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
        */
       socket
         .in(roomId)
-        .emit(ACTIONS.TEXT_CHANGE, { delta });
+        .emit(ACTIONS.TEXT_CHANGE, { delta, client });
       console.log({ roomId, delta, client });
     }
   );
@@ -63,11 +63,12 @@ io.on('connection', (socket) => {
   /**
    * sync text
    */
-  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, delta }) => {
+  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, delta, client }) => {
     io.to(socketId).emit(ACTIONS.TEXT_CHANGE, {
       delta,
+      client
     });
-    console.log('sync data server', { socketId, delta });
+    console.log('sync data server', { delta, client });
   });
 
   /**
