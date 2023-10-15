@@ -46,7 +46,6 @@ io.on('connection', (socket) => {
   });
   /**
    * text change
-   * sync text
    */
   socket.on(
     ACTIONS.TEXT_CHANGE,
@@ -54,13 +53,21 @@ io.on('connection', (socket) => {
       /**
        * return roomId, text, client
        */
-      socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { roomId, delta, client });
+      socket
+        .in(roomId)
+        .emit(ACTIONS.TEXT_CHANGE, { delta });
       console.log({ roomId, delta, client });
     }
   );
 
+  /**
+   * sync text
+   */
   socket.on(ACTIONS.SYNC_TEXT, ({ socketId, delta }) => {
-    io.to(socketId).emit(ACTIONS.TEXT_CHANGE, { delta });
+    io.to(socketId).emit(ACTIONS.TEXT_CHANGE, {
+      delta,
+    });
+    console.log('sync data server', { socketId, delta });
   });
 
   /**
