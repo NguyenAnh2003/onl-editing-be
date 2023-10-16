@@ -10,6 +10,8 @@ const io = new Server(server);
 
 const userSocketMap = {};
 
+const currentContent = {};
+
 const getAllConnected = (roomId) => {
   /**
    *
@@ -47,28 +49,38 @@ io.on('connection', (socket) => {
   /**
    * text change
    */
-  socket.on(
-    ACTIONS.TEXT_CHANGE,
-    ({ roomId, delta, client }) => {
-      /**
-       * return roomId, text, client
-       */
-      socket
-        .in(roomId)
-        .emit(ACTIONS.TEXT_CHANGE, { delta, client });
-      console.log({ roomId, delta, client });
+  socket.on(ACTIONS.TEXT_CHANGE, ({ roomId, content, client }) => {
+    /**
+     * return roomId, text, client
+     */
+    const clients = getAllConnected(roomId);
+    const rs = clients.filter((i) => i.name.includes(client));
+    console.log(rs);
+    if (rs === client) return;
+    else {
+      socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
+      console.log({ roomId, content, client });
     }
-  );
+  });
 
   /**
    * sync text
    */
-  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, delta, client }) => {
-    io.to(socketId).emit(ACTIONS.TEXT_CHANGE, {
-      delta,
-      client
-    });
-    console.log('sync data server', { delta, client });
+  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, content, client, roomId }) => {
+    if (!content) {
+      console.log('nulll content');
+      return;
+    } else {
+      io.in(roomId).to(socketId).emit(ACTIONS.TEXT_CHANGE, {
+        content,
+        client,
+      });
+      console.log('sync data server', {
+        content,
+        client,
+        roomId,
+      });
+    }
   });
 
   /**
@@ -88,6 +100,4 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(PORT, () =>
-  console.log(`Listenning on port ${PORT}`)
-);
+server.listen(PORT, () => console.log(`Listenning on port ${PORT}`));
