@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 const documentSchema = mongoose.Schema({
-  data: {
-    type: Object,
-  },
-  owner: {
+  _id: {
     type: String,
     required: true,
+  },
+  data: {
+    type: Object,
   },
 });
 

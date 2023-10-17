@@ -1,18 +1,14 @@
 import Doc from '../schema/document.schema.js';
 
-export const createDocumemt = async (name) => {
+export const createDocumemt = async (docId) => {
   try {
     const doc = new Doc({
+      _id: docId,
       data: '',
-      owner: name,
     });
     const result = await doc.save();
     /** returning result */
-    return {
-      docId: result._id,
-      data: result.data,
-      owner: result.owner,
-    };
+    return result;
   } catch (error) {
     console.error(error);
   }
@@ -21,7 +17,8 @@ export const createDocumemt = async (name) => {
 export const getDocumemt = async (docId) => {
   if (!docId) return;
   const doc = await Doc.findById(docId);
-  return doc;
+  if (doc) return doc;
+  return await createDocumemt(docId);
 };
 
 export const updateDocumemt = async (id, data) => {
