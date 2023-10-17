@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 import http from 'http';
 import ACTIONS from './actions.js';
 import connection from './src/db/db.config.js';
-import { getDocumemt } from './src/controller/document.controller.js';
+import { getDocumemt, updateDocumemt } from './src/controller/document.controller.js';
 
 const PORT = 5000;
 const app = express();
@@ -79,12 +79,26 @@ io.on('connection', (socket) => {
     console.log(rs);
     if (rs === client) return;
     else {
+      /**
+       * Socket send text change
+       * Check username with senderClient
+       */
       socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
       console.log({ roomId, content, client });
     }
   });
 
   /**
+   * Save document on text change
+   */
+  socket.on(ACTIONS.SAVE_TEXT, async ({ roomId, content }) => {
+    if (roomId && content) {  
+      const rs = await updateDocumemt(roomId, content);
+      console.log(rs ? 'update success' : 'update failed');
+    } 
+  });
+
+  /** 
    * sync text
    */
   socket.on(ACTIONS.SYNC_TEXT, ({ socketId, content, client, roomId }) => {
