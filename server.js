@@ -74,47 +74,21 @@ io.on('connection', (socket) => {
     /**
      * return roomId, text, client
      */
-    const clients = getAllConnected(roomId);
-    const rs = clients.filter((i) => i.name.includes(client));
-    console.log(rs);
-    if (rs === client) return;
-    else {
-      /**
-       * Socket send text change
-       * Check username with senderClient
-       */
-      socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
-      console.log({ roomId, content, client });
-    }
+    /**
+     * Socket send text change
+     * Check username with senderClient
+     */
+    socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
+    console.log({ roomId, content, client });
   });
 
   /**
    * Save document on text change
    */
   socket.on(ACTIONS.SAVE_TEXT, async ({ roomId, content }) => {
-    if (roomId && content) {  
+    if (roomId && content) {
       const rs = await updateDocumemt(roomId, content);
       console.log(rs ? 'update success' : 'update failed');
-    } 
-  });
-
-  /** 
-   * sync text
-   */
-  socket.on(ACTIONS.SYNC_TEXT, ({ socketId, content, client, roomId }) => {
-    if (!content) {
-      console.log('nulll content');
-      return;
-    } else {
-      io.in(roomId).to(socketId).emit(ACTIONS.TEXT_CHANGE, {
-        content,
-        client,
-      });
-      console.log('sync data server', {
-        content,
-        client,
-        roomId,
-      });
     }
   });
 
