@@ -20,6 +20,8 @@ connection();
 
 const userSocketMap = {};
 
+const color = randomColor();
+
 const getAllConnected = (roomId) => {
   return Array.from(
     /**
@@ -27,10 +29,14 @@ const getAllConnected = (roomId) => {
      */
     io.sockets.adapter.rooms.get(roomId) || []
   ).map((socketId) => {
+    /**
+     * @returns (socketId, name, roomId, color, selection)
+     */
     return {
       socketId,
       name: userSocketMap[socketId],
       roomId: roomId,
+      color,
     };
   });
 };
@@ -44,7 +50,6 @@ io.on('connection', (socket) => {
      * Document -> Space editing
      */
     /** Create space */
-    const doc = await getDocumemt(roomId);
 
     /**
      * Join roomId
@@ -54,14 +59,22 @@ io.on('connection', (socket) => {
 
     const clients = getAllConnected(roomId);
     console.log(clients);
+
+    /**
+     * @emits clients, name, socketId, color, selection?
+     */
     clients.forEach(({ socketId }) => {
       io.to(socketId).timeout(300).emit(ACTIONS.JOINED, {
         clients,
         name,
         socketId: socket.id,
-        color: randomColor()
+        color,
       });
     });
+  });
+
+  socket.on(ACTIONS.LOAD_DOC, async ({ roomId }) => {
+    const doc = await getDocumemt(roomId);
 
     if (doc) {
       /** Load space content */
@@ -69,6 +82,7 @@ io.on('connection', (socket) => {
       console.log('SpaceId', doc, 'Load space data success');
     }
   });
+
   /**
    * text change
    */
@@ -78,8 +92,16 @@ io.on('connection', (socket) => {
      * Socket send text change
      * Check username with senderClient
      */
-    socket.in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
-    console.log({ roomId, content, client });
+    socket.timeout(300).in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
+    // console.log({ roomId, content, client });
+  });
+
+  /** cursor change */
+  socket.on(ACTIONS.CURSOR_CHANGE, ({ roomId, socketId, selection, source, client }) => {
+    if (selection) {
+      console.log({selection});
+      socket.in(roomId).emit(ACTIONS.CURSOR_CHANGE, { socketId, selection, source, client });
+    }
   });
 
   /**
