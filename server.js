@@ -4,6 +4,7 @@ import http from 'http';
 import ACTIONS from './actions.js';
 import connection from './src/db/db.config.js';
 import { getDocumemt, updateDocumemt } from './src/controller/document.controller.js';
+import randomColor from 'randomcolor';
 
 const PORT = 5000;
 const app = express();
@@ -58,6 +59,7 @@ io.on('connection', (socket) => {
         clients,
         name,
         socketId: socket.id,
+        color: randomColor()
       });
     });
 
@@ -73,8 +75,6 @@ io.on('connection', (socket) => {
   socket.on(ACTIONS.TEXT_CHANGE, ({ roomId, content, client }) => {
     /**
      * return roomId, text, client
-     */
-    /**
      * Socket send text change
      * Check username with senderClient
      */
