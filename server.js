@@ -66,9 +66,9 @@ io.on('connection', (socket) => {
     clients.forEach(({ socketId }) => {
       io.to(socketId).timeout(300).emit(ACTIONS.JOINED, {
         clients,
-        name,
-        socketId: socket.id,
-        color,
+        // name,
+        // socketId: socket.id,
+        // color,
       });
     });
   });
