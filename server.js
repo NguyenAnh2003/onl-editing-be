@@ -35,7 +35,7 @@ const getAllConnected = (roomId) => {
     return {
       socketId,
       name: userSocketMap[socketId],
-      roomId: roomId,
+      roomId,
       color,
     };
   });
@@ -49,11 +49,8 @@ io.on('connection', (socket) => {
      * RoomId -> SpaceId
      * Document -> Space editing
      */
-    /** Create space */
 
-    /**
-     * Join roomId
-     */
+    /* Join roomId */
     userSocketMap[socket.id] = name;
     socket.join(roomId);
 
@@ -66,13 +63,12 @@ io.on('connection', (socket) => {
     clients.forEach(({ socketId }) => {
       io.to(socketId).timeout(300).emit(ACTIONS.JOINED, {
         clients,
-        // name,
-        // socketId: socket.id,
-        // color,
+        color,
       });
     });
   });
 
+  /** Create space */
   socket.on(ACTIONS.LOAD_DOC, async ({ roomId }) => {
     const doc = await getDocumemt(roomId);
 
@@ -97,10 +93,10 @@ io.on('connection', (socket) => {
   });
 
   /** cursor change */
-  socket.on(ACTIONS.CURSOR_CHANGE, ({ roomId, socketId, selection, source, client }) => {
+  socket.on(ACTIONS.CURSOR_CHANGE, ({ roomId, socketId, selection }) => {
     if (selection) {
-      console.log({selection});
-      socket.in(roomId).emit(ACTIONS.CURSOR_CHANGE, { socketId, selection, source, client });
+      console.log({ selection });
+      socket.in(roomId).emit(ACTIONS.CURSOR_CHANGE, { socketId, selection });
     }
   });
 
