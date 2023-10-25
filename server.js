@@ -10,6 +10,8 @@ import route from './src/routes/index.route.js';
 
 const PORT = 5000;
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
 
 /** database connection
  * function call
@@ -23,9 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // REST
 app.use('/api', route);
-
-const server = http.createServer(app);
-const io = new Server(server);
 
 /**
  * WS
