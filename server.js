@@ -3,25 +3,38 @@ import { Server } from 'socket.io';
 import http from 'http';
 import ACTIONS from './actions.js';
 import connection from './src/db/db.config.js';
+import cors from 'cors';
 import { getDocumemt, updateDocumemt } from './src/controller/document.controller.js';
 import randomColor from 'randomcolor';
+import route from './src/routes/index.route.js';
 
 const PORT = 5000;
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
 
 /** database connection
  * function call
  * mongodb
- *
  */
 connection();
 
+// config
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+// REST
+app.use('/api', route);
+
+const server = http.createServer(app);
+const io = new Server(server);
+
+/**
+ * WS
+ * userSocketMap for joining
+ *  */
 const userSocketMap = {};
-
+/** random color sending for each socket */
 const color = randomColor();
-
+/** temp array for pageId */
 const getAllConnected = (roomId) => {
   return Array.from(
     /**
@@ -40,7 +53,7 @@ const getAllConnected = (roomId) => {
     };
   });
 };
-
+/** RR Ws */
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
   /** on Connection */

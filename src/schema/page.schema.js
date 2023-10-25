@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const documentSchema = mongoose.Schema({
+const pageSchema = mongoose.Schema({
   _id: {
     type: String,
     required: true,
@@ -10,6 +10,6 @@ const documentSchema = mongoose.Schema({
   },
 });
 
-const Doc = mongoose.model('Document', documentSchema);
+const Page = mongoose.model('Page', pageSchema);
 
-export default Doc;
+export default Page;
