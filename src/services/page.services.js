@@ -1,10 +1,10 @@
 import Page from '../schema/page.schema.js';
 
 /** REST */
-export const createPageService = async (pageId) => {
+export const createPageService = async (userId) => {
   try {
     const page = new Page({
-      _id: pageId,
+      userId: userId,
       data: '',
     });
     const result = await page.save();
