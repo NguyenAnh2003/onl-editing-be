@@ -1,15 +1,30 @@
 import Page from '../schema/page.schema.js';
 
 /** REST */
-export const createPageService = async (userId) => {
+export const createPageService = async (userId, pageName) => {
   try {
     const page = new Page({
       userId: userId,
-      data: '',
+      name: pageName,
     });
     const result = await page.save();
     /** returning result */
     return result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/** getPage by pageId used for Ws */
+export const getPagesByUserIdService = async (userId) => {
+  /**
+   * @param userId
+   * @returns list of pages that userId owns
+   */
+  try {
+    if (!userId) return;
+    const page = await Page.find({ userId });
+    return page;
   } catch (error) {
     console.error(error);
   }
