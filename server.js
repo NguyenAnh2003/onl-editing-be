@@ -31,24 +31,18 @@ app.use('/api', route);
  * userSocketMap for joining
  *  */
 const userSocketMap = {};
-/** random color sending for each socket */
-const color = randomColor();
 /** temp array for pageId */
 const getAllConnected = (roomId) => {
   return Array.from(
-    /**
-     * sockets.adapter.rooms.get()?
-     */
+    /** sockets.adapter.rooms.get()? */
     io.sockets.adapter.rooms.get(roomId) || []
   ).map((socketId) => {
-    /**
-     * @returns (socketId, name, roomId, color, selection)
-     */
+    /** @returns (socketId, name, roomId, color, selection) */
     return {
       socketId,
       name: userSocketMap[socketId],
       roomId,
-      color,
+      color: randomColor()
     };
   });
 };
@@ -56,7 +50,7 @@ const getAllConnected = (roomId) => {
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
   /** on Connection */
-  socket.on(ACTIONS.JOIN, async ({ roomId, name }) => {
+  socket.on(ACTIONS.JOIN, async ({ roomId, name, userId }) => {
     /**
      * RoomId -> SpaceId
      * Document -> Space editing
@@ -69,14 +63,19 @@ io.on('connection', (socket) => {
     const clients = getAllConnected(roomId);
     console.log(clients);
 
-    /**
-     * @emits clients, name, socketId, color, selection?
-     */
+    /** @emits clients, name, socketId, color, userId*/
     clients.forEach(({ socketId }) => {
-      io.to(socketId).timeout(300).emit(ACTIONS.JOINED, {
-        clients,
-        color,
-      });
+      io.to(socketId)
+        .timeout(300)
+        .emit(ACTIONS.JOINED, {
+          clients,
+          userJoined: {
+            color: randomColor(),
+            socketId,
+            name,
+            userId,
+          },
+        });
     });
   });
 
@@ -101,7 +100,7 @@ io.on('connection', (socket) => {
      * Check username with senderClient
      */
     socket.timeout(300).in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
-    // console.log({ roomId, content, client });
+    console.log({ roomId, content, client });
   });
 
   /** cursor change */

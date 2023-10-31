@@ -6,6 +6,9 @@ export const createPageService = async (userId, pageName) => {
     const page = new Page({
       userId: userId,
       name: pageName,
+      /** empty content, mode */
+      mode: '',
+      content: '',
     });
     const result = await page.save();
     /** returning result */
@@ -15,7 +18,7 @@ export const createPageService = async (userId, pageName) => {
   }
 };
 
-/** getPage by pageId used for Ws */
+/** getPage by pageId used REST */
 export const getPagesByUserIdService = async (userId) => {
   /**
    * @param userId
@@ -30,17 +33,39 @@ export const getPagesByUserIdService = async (userId) => {
   }
 };
 
-/** getPage by pageId used for Ws */
-export const getPage = async (pageId) => {
+/** getPage by pageId used for */
+export const getDataByPageIdService = async (pageId) => {
   if (!pageId) return;
   const page = await Page.findById(pageId);
-  if (page) return page;
-  return await createPage(pageId);
+  return page;
 };
 
 /** Ws update content */
 export const updatePage = async (id, data) => {
   return await Page.findByIdAndUpdate(id, { data });
+};
+
+/** add user to page */
+export const addUser2PageService = async (userId, pageId) => {
+  try {
+    const rs = await Page.findOneAndUpdate({ pageId: pageId }, { $addToSet: { colabs: { userId: userId } } });
+    return rs;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/**
+ * getColab page by userId
+ * https://kb.objectrocket.com/mongo-db/use-mongoose-to-find-in-an-array-of-objects-1206
+ * */
+export const getColabPageService = async (userId) => {
+  try {
+    const rs = await Page.find({ 'colabs.userId': userId });
+    return rs;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 /** delete page using REST pass pageId */

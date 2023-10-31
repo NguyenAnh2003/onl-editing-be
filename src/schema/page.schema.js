@@ -22,7 +22,7 @@ const pageSchema = mongoose.Schema(
       required: true
     },
     /** Content */
-    data: {
+    content: {
       type: Object,
     },
     mode: {
