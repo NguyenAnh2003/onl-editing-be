@@ -26,7 +26,7 @@ export const getPagesByUserIdService = async (userId) => {
    */
   try {
     if (!userId) return;
-    const page = await Page.find({ userId });
+    const page = await Page.find({ 'userId':userId });
     return page;
   } catch (error) {
     console.error(error);

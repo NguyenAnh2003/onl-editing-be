@@ -11,9 +11,10 @@ route.get('/search-user/:name', searchUserController);
 /** Page */
 route.post('/create-page', createPageController);
 route.get('/get-pages/:userId', getPagesByUserIdController);
+/** get page's data */
 route.get('/get-page/:pageId', getDataByPageIdController);
+route.get('/get-colab-pages/:userId', getColabPageController);
 /** add2Page */
 route.post('/add-user-to-page', addUser2PageController);
-route.get('/get-colab-pages/:userId', getColabPageController);
 // route.post('/delete-page');
 export default route;

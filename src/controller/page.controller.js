@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { addUser2PageService, createPageService, getColabPageService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
 
 export const createPageController = async (req, res) => {
