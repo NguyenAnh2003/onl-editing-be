@@ -26,7 +26,11 @@ export const addUser2PageController = async (req, res) => {
   const { userId, pageId } = req.body;
   try {
     const rs = await addUser2PageService(userId, pageId);
-    res.status(200).json(`Success adding to ${pageId}`);
+    if (rs) {
+      res.status(200).json(`Success adding to ${pageId}`);
+    } else {
+      console.log('something wrong');
+    }
   } catch (error) {
     console.error(error);
   }
@@ -35,6 +39,10 @@ export const addUser2PageController = async (req, res) => {
 /** getColabPage */
 export const getColabPageController = async (req, res) => {
   const { userId } = req.params;
+  if (!userId) {
+    console.error('userId undefined');
+    return;
+  }
   try {
     const rs = await getColabPageService(userId);
     res.status(200).send(rs);

@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
  */
 const pageSchema = mongoose.Schema(
   /** data */
-  { 
+  {
     /** UserId required: true*/
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -19,7 +19,7 @@ const pageSchema = mongoose.Schema(
     /** Page name */
     name: {
       type: String,
-      required: true
+      required: true,
     },
     /** Content */
     content: {
@@ -30,7 +30,7 @@ const pageSchema = mongoose.Schema(
     },
     colabs: [
       {
-        userId: { type: String },
+        userId: { type: String, required: true, unique: true },
       },
     ],
   },

@@ -26,7 +26,7 @@ export const getPagesByUserIdService = async (userId) => {
    */
   try {
     if (!userId) return;
-    const page = await Page.find({ 'userId':userId });
+    const page = await Page.find({ userId: userId });
     return page;
   } catch (error) {
     console.error(error);
@@ -47,8 +47,10 @@ export const updatePage = async (id, data) => {
 
 /** add user to page */
 export const addUser2PageService = async (userId, pageId) => {
+  console.log(userId, pageId);
   try {
-    const rs = await Page.findOneAndUpdate({ pageId: pageId }, { $addToSet: { colabs: { userId: userId } } });
+    const rs = await Page.findByIdAndUpdate(pageId, { $addToSet: { colabs: { userId: userId } } });
+    console.log(rs);
     return rs;
   } catch (error) {
     console.error(error);
