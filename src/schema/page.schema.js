@@ -28,11 +28,6 @@ const pageSchema = mongoose.Schema(
     mode: {
       type: String,
     },
-    colabs: [
-      {
-        userId: { type: String, required: true, unique: true },
-      },
-    ],
   },
   /** Timestamp */
   {

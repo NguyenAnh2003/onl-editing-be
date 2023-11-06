@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { addUser2PageService, createPageService, getColabPageService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
+import {  createPageService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
 
 export const createPageController = async (req, res) => {
   const { userId, pageName } = req.body;
@@ -15,36 +15,6 @@ export const getPagesByUserIdController = async (req, res) => {
   const { userId } = req.params;
   try {
     const rs = await getPagesByUserIdService(userId);
-    res.status(200).send(rs);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-/** addU2Pge */
-export const addUser2PageController = async (req, res) => {
-  const { userId, pageId } = req.body;
-  try {
-    const rs = await addUser2PageService(userId, pageId);
-    if (rs) {
-      res.status(200).json(`Success adding to ${pageId}`);
-    } else {
-      console.log('something wrong');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-/** getColabPage */
-export const getColabPageController = async (req, res) => {
-  const { userId } = req.params;
-  if (!userId) {
-    console.error('userId undefined');
-    return;
-  }
-  try {
-    const rs = await getColabPageService(userId);
     res.status(200).send(rs);
   } catch (error) {
     console.error(error);
