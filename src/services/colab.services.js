@@ -2,15 +2,25 @@ import Colab from '../schema/colabs.schema.js';
 
 /** add user to page */
 export const addUser2PageService = async (userId, pageId) => {
+  /**
+   * @param userId
+   * @param pageId
+   * is userId and pageId already exist in DB -> blocking
+   */
   console.log(userId, pageId);
   try {
-    const newColab = new Colab({
-      pageId: pageId,
-      userId: userId,
-    });
-    const rs = await newColab.save();
-    console.log(rs);
-    return rs;
+    const colab = await Colab.findOne({ pageId: pageId, userId: userId });
+    if (colab) {
+      return;
+    } else {
+      const newColab = new Colab({
+        pageId: pageId,
+        userId: userId,
+      });
+      const rs = await newColab.save();
+      console.log(rs);
+      return rs;
+    }
   } catch (error) {
     console.error(error);
   }

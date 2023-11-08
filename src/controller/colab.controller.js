@@ -8,6 +8,7 @@ export const addUser2PageController = async (req, res) => {
     if (rs) {
       res.status(200).json(`Success adding to ${pageId}`);
     } else {
+      res.status(404).send('User already exist')
       console.log('something wrong');
     }
   } catch (error) {
