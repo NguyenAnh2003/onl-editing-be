@@ -7,6 +7,13 @@ import cors from 'cors';
 import { getDocumemt, updateDocumemt } from './src/controller/document.controller.js';
 import randomColor from 'randomcolor';
 import route from './src/routes/index.route.js';
+import { getDataByPageIdService, updatePage } from './src/services/page.services.js';
+import Delta from 'quill-delta';
+
+const page = {
+  data: new Delta([]),
+  history: [],
+};
 
 const PORT = 5000;
 const app = express();
@@ -42,7 +49,7 @@ const getAllConnected = (roomId) => {
       socketId,
       name: userSocketMap[socketId],
       roomId,
-      color: randomColor()
+      color: randomColor(),
     };
   });
 };
@@ -77,6 +84,9 @@ io.on('connection', (socket) => {
           },
         });
     });
+
+    const data = await getDataByPageIdService(roomId);
+    io.to(roomId).emit(ACTIONS.LOAD_DOC, { data });
   });
 
   /** Create space */
@@ -99,8 +109,16 @@ io.on('connection', (socket) => {
      * Socket send text change
      * Check username with senderClient
      */
+    page.data = page.data.compose(new Delta(content));
+    page.history.push(content);
+
     socket.timeout(300).in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
     console.log({ roomId, content, client });
+
+    setTimeout(async () => {
+      const rs = await updatePage(roomId, page.data);
+      console.log('update', rs);
+    }, 500);
   });
 
   /** cursor change */

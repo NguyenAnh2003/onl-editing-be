@@ -42,7 +42,7 @@ export const getDataByPageIdService = async (pageId) => {
 
 /** Ws update content */
 export const updatePage = async (id, data) => {
-  return await Page.findByIdAndUpdate(id, { data });
+  return await Page.findByIdAndUpdate(id, { $set: { content: data } }, {new: true});
 };
 
 /** delete page using REST pass pageId */
