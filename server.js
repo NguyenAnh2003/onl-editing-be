@@ -62,6 +62,7 @@ io.on('connection', (socket) => {
      * RoomId -> SpaceId
      * Document -> Space editing
      */
+    const data = await getDataByPageIdService(roomId);
 
     /* Join roomId */
     userSocketMap[socket.id] = name;
@@ -72,6 +73,7 @@ io.on('connection', (socket) => {
 
     /** @emits clients, name, socketId, color, userId*/
     clients.forEach(({ socketId }) => {
+      console.log(data);
       io.to(socketId)
         .timeout(300)
         .emit(ACTIONS.JOINED, {
@@ -82,23 +84,23 @@ io.on('connection', (socket) => {
             name,
             userId,
           },
+          // data,
         });
     });
 
-    const data = await getDataByPageIdService(roomId);
-    io.to(roomId).emit(ACTIONS.LOAD_DOC, { data });
+    io.in(roomId).emit(ACTIONS.LOAD_DOC, { data });
   });
 
   /** Create space */
-  socket.on(ACTIONS.LOAD_DOC, async ({ roomId }) => {
-    const doc = await getDocumemt(roomId);
+  // socket.on(ACTIONS.LOAD_DOC, async ({ roomId }) => {
+  //   const doc = await getDocumemt(roomId);
 
-    if (doc) {
-      /** Load space content */
-      io.timeout(300).to(roomId).emit(ACTIONS.LOAD_DOC, { doc: doc.data });
-      console.log('SpaceId', doc, 'Load space data success');
-    }
-  });
+  //   if (doc) {
+  //     /** Load space content */
+  //     io.timeout(300).to(roomId).emit(ACTIONS.LOAD_DOC, { doc: doc.data });
+  //     console.log('SpaceId', doc, 'Load space data success');
+  //   }
+  // });
 
   /**
    * text change
@@ -118,7 +120,7 @@ io.on('connection', (socket) => {
     setTimeout(async () => {
       const rs = await updatePage(roomId, page.data);
       console.log('update', rs);
-    }, 500);
+    }, 300);
   });
 
   /** cursor change */
