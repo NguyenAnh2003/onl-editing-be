@@ -9,6 +9,7 @@ import randomColor from 'randomcolor';
 import route from './src/routes/index.route.js';
 import { getDataByPageIdService, updatePage } from './src/services/page.services.js';
 import Delta from 'quill-delta';
+import { getResponse } from './src/services/askai.service.js';
 
 const page = {
   data: new Delta([]),
@@ -139,6 +140,15 @@ io.on('connection', (socket) => {
       const rs = await updateDocumemt(roomId, content);
       console.log(rs ? 'update success' : 'update failed');
     }
+  });
+
+  /** message with AI */
+  socket.on(ACTIONS.SEND_MESSAGE, async ({ message, sessionId }) => {
+    console.log(message);
+    /** calling ai service */
+    const response = await getResponse(message);
+    console.log(response);
+    io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { response, sessionId });
   });
 
   /**
