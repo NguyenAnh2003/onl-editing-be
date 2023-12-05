@@ -10,6 +10,7 @@ import route from './src/routes/index.route.js';
 import { getDataByPageIdService, updatePage } from './src/services/page.services.js';
 import Delta from 'quill-delta';
 import { getResponse } from './src/services/askai.service.js';
+import { askAIController } from './src/controller/askai.controller.js';
 
 const page = {
   data: new Delta([]),
@@ -146,7 +147,7 @@ io.on('connection', (socket) => {
   socket.on(ACTIONS.SEND_MESSAGE, async ({ message, sessionId }) => {
     console.log(message);
     /** calling ai service */
-    const response = await getResponse(message);
+    const response = await askAIController(message);
     console.log(response);
     io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { response, sessionId });
   });
@@ -165,6 +166,7 @@ io.on('connection', (socket) => {
       // delete userSocketMap[socket.id];
       socket.leave();
     });
+
   });
 });
 
