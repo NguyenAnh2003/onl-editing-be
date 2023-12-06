@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import {  createPageService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
+import { createPageService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
 
 export const createPageController = async (req, res) => {
   const { userId, pageName } = req.body;
@@ -27,6 +27,16 @@ export const getDataByPageIdController = async (req, res) => {
   try {
     const rs = await getDataByPageIdService(pageId);
     res.status(200).send(rs);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+/** export pdf file */
+export const exportPDFController = async (req, res) => {
+  const { delta } = req.body;
+  try {
+    /** pdf service */
   } catch (error) {
     console.error(error);
   }

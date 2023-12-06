@@ -1,6 +1,6 @@
 import express from 'express';
 import { searchUserController, userLoginController, userRegisterController } from '../controller/user.controller.js';
-import { createPageController, getDataByPageIdController, getPagesByUserIdController } from '../controller/page.controller.js';
+import { createPageController, exportPDFController, getDataByPageIdController, getPagesByUserIdController } from '../controller/page.controller.js';
 import { addUser2PageController, getColabPageController } from '../controller/colab.controller.js';
 import { askAIController } from '../controller/askai.controller.js';
 /** define route */
@@ -15,7 +15,7 @@ route.post('/create-page', createPageController);
 route.get('/get-pages/:userId', getPagesByUserIdController);
 /** get page's data */
 route.get('/get-page/:pageId', getDataByPageIdController);
-
+route.post('/pdf-export', exportPDFController);
 // route.post('/delete-page');
 
 /** Colab */

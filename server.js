@@ -45,11 +45,12 @@ const getAllConnected = (roomId) => {
     io.sockets.adapter.rooms.get(roomId) || []
   ).map((socketId) => {
     /** @returns (socketId, name, roomId, color, selection) */
+    console.log('name', userSocketMap[socketId].name, 'sessionId', socketId);
     return {
       socketId,
       name: userSocketMap[socketId].name,
       roomId,
-      color: randomColor(),
+      color: userSocketMap[socketId].color,
       userId: userSocketMap[socketId].userId,
     };
   });
@@ -63,10 +64,12 @@ io.on('connection', (socket) => {
      * RoomId -> SpaceId
      * Document -> Space editing
      */
-    const data = await getDataByPageIdService(roomId);
 
+    const data = await getDataByPageIdService(roomId);
+    const color = randomColor();
     /* Join roomId */
-    userSocketMap[socket.id] = {name, userId};
+    userSocketMap[socket.id] = { name, userId, color };
+    console.log('checking', socket.id, 'name', name);
     socket.join(roomId);
 
     const clients = getAllConnected(roomId);

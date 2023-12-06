@@ -45,8 +45,11 @@ export const updatePage = async (id, data) => {
   return await Page.findByIdAndUpdate(id, { $set: { content: data } }, {new: true});
 };
 
-/** delete page using REST pass pageId */
-// export default deletePage = async (pageId) => {
-//   const rs = await Page.findOneAndUpdate({});
-//   return rs;
-// };
+/** export PDF REST */
+export const exportPDFService = async(delta) => {
+  try {
+    
+  } catch (error) {
+    console.error(error)
+  }
+}
