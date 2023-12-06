@@ -4,12 +4,10 @@ import http from 'http';
 import ACTIONS from './actions.js';
 import connection from './src/db/db.config.js';
 import cors from 'cors';
-import { getDocumemt, updateDocumemt } from './src/controller/document.controller.js';
 import randomColor from 'randomcolor';
 import route from './src/routes/index.route.js';
 import { getDataByPageIdService, updatePage } from './src/services/page.services.js';
 import Delta from 'quill-delta';
-import { getResponse } from './src/services/askai.service.js';
 import { askAIController } from './src/controller/askai.controller.js';
 
 const page = {
@@ -49,9 +47,10 @@ const getAllConnected = (roomId) => {
     /** @returns (socketId, name, roomId, color, selection) */
     return {
       socketId,
-      name: userSocketMap[socketId],
+      name: userSocketMap[socketId].name,
       roomId,
       color: randomColor(),
+      userId: userSocketMap[socketId].userId,
     };
   });
 };
@@ -67,7 +66,7 @@ io.on('connection', (socket) => {
     const data = await getDataByPageIdService(roomId);
 
     /* Join roomId */
-    userSocketMap[socket.id] = name;
+    userSocketMap[socket.id] = {name, userId};
     socket.join(roomId);
 
     const clients = getAllConnected(roomId);
@@ -93,20 +92,7 @@ io.on('connection', (socket) => {
     io.in(roomId).emit(ACTIONS.LOAD_DOC, { data });
   });
 
-  /** Create space */
-  // socket.on(ACTIONS.LOAD_DOC, async ({ roomId }) => {
-  //   const doc = await getDocumemt(roomId);
-
-  //   if (doc) {
-  //     /** Load space content */
-  //     io.timeout(300).to(roomId).emit(ACTIONS.LOAD_DOC, { doc: doc.data });
-  //     console.log('SpaceId', doc, 'Load space data success');
-  //   }
-  // });
-
-  /**
-   * text change
-   */
+  /** text change*/
   socket.on(ACTIONS.TEXT_CHANGE, ({ roomId, content, client }) => {
     /**
      * return roomId, text, client
@@ -133,16 +119,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  /**
-   * Save document on text change
-   */
-  socket.on(ACTIONS.SAVE_TEXT, async ({ roomId, content }) => {
-    if (roomId && content) {
-      const rs = await updateDocumemt(roomId, content);
-      console.log(rs ? 'update success' : 'update failed');
-    }
-  });
-
   /** message with AI */
   socket.on(ACTIONS.SEND_MESSAGE, async ({ message, sessionId }) => {
     console.log(message);
@@ -166,7 +142,6 @@ io.on('connection', (socket) => {
       // delete userSocketMap[socket.id];
       socket.leave();
     });
-
   });
 });
 
