@@ -1,4 +1,5 @@
 import Colab from '../schema/colabs.schema.js';
+import Page from '../schema/page.schema.js';
 
 /** add user to page */
 export const addUser2PageService = async (userId, pageId) => {
@@ -9,8 +10,11 @@ export const addUser2PageService = async (userId, pageId) => {
    */
   console.log(userId, pageId);
   try {
+    const page = await Page.findById({ _id: pageId });
     const colab = await Colab.findOne({ pageId: pageId, userId: userId });
-    if (colab) {
+    console.log(page.userId, page.userId.toString() === userId);
+    if (colab || page.userId.toString() === userId) {
+      console.log('cannot add');
       return;
     } else {
       const newColab = new Colab({
