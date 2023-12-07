@@ -54,7 +54,7 @@ export const exportPDFService = async (delta, filename) => {
     return new Promise((resolve, reject) => {
       const converter = new QuillDeltaToHtmlConverter(delta.ops, {});
       const html = converter.convert();
-      pdf.create(html, { format: 'A4' }).toFile(`${filename}.pdf`, async (err, res) => {
+      pdf.create(html, { format: 'A4' }).toFile(`./tmp/${filename}.pdf`, async (err, res) => {
         if (err) {
           reject(err);
         } else {
