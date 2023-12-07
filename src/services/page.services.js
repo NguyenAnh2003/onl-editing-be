@@ -1,5 +1,8 @@
 import Page from '../schema/page.schema.js';
-
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
+import pdf from 'html-pdf';
+import fs from 'fs';
+import { uploadPdfService } from '../libs/upload.js';
 /** REST */
 export const createPageService = async (userId, pageName) => {
   try {
@@ -42,14 +45,26 @@ export const getDataByPageIdService = async (pageId) => {
 
 /** Ws update content */
 export const updatePage = async (id, data) => {
-  return await Page.findByIdAndUpdate(id, { $set: { content: data } }, {new: true});
+  return await Page.findByIdAndUpdate(id, { $set: { content: data } }, { new: true });
 };
 
 /** export PDF REST */
-export const exportPDFService = async(delta) => {
+export const exportPDFService = async (delta, filename) => {
   try {
-    
+    return new Promise((resolve, reject) => {
+      const converter = new QuillDeltaToHtmlConverter(delta.ops, {});
+      const html = converter.convert();
+      pdf.create(html, { format: 'A4' }).toFile(`${filename}.pdf`, async (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          const buffer = await fs.promises.readFile(res.filename);
+          const result = await uploadPdfService(buffer, `${filename}.pdf`);
+          resolve(result);
+        }
+      });
+    });
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-}
+};
