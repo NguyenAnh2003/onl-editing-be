@@ -2,13 +2,13 @@ import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
 import ACTIONS from './actions.js';
-import connection from './src/db/db.config.js';
 import cors from 'cors';
 import randomColor from 'randomcolor';
 import route from './src/routes/index.route.js';
 import { getDataByPageIdService, updatePage } from './src/services/page.services.js';
 import Delta from 'quill-delta';
 import { askAIController } from './src/controller/askai.controller.js';
+import connection from './src/config/db.config.js';
 
 const page = {
   data: new Delta([]),
