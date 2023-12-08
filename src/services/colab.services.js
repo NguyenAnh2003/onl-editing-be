@@ -35,6 +35,7 @@ export const addUser2PageService = async (userId, pageId) => {
  * https://kb.objectrocket.com/mongo-db/use-mongoose-to-find-in-an-array-of-objects-1206
  * */
 export const getColabPageService = async (userId) => {
+  if(!userId) return;
   try {
     const rs = await Colab.find({ userId: userId });
     return rs;
