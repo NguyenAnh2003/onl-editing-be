@@ -124,12 +124,21 @@ io.on('connection', (socket) => {
 
   /** message with AI */
   socket.on(ACTIONS.SEND_MESSAGE, async ({ messageSending, sessionId }) => {
-    console.log(messageSending);
-    const { content, role } = messageSending;
-    /** calling ai service */
-    const response = await askAIController(content, role);
-    console.log(response);
-    io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { response, sessionId });
+    try {
+      console.log(messageSending);
+      const { content, role } = messageSending;
+      /** calling ai service */
+      await askAIController(content, role).then((response) => {
+        console.log(response);
+        const responseData = {
+          response,
+          sessionId,
+        };
+        io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { responseData });
+      });
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   /**
