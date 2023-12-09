@@ -9,6 +9,7 @@ import { getDataByPageIdService, updatePage } from './src/services/page.services
 import Delta from 'quill-delta';
 import { askAIController } from './src/controller/askai.controller.js';
 import connection from './src/config/db.config.js';
+import fileUpload from 'express-fileupload';
 
 const page = {
   data: new Delta([]),
@@ -28,6 +29,7 @@ connection();
 
 // config
 app.use(express.json());
+app.use(fileUpload())
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // REST

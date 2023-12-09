@@ -3,6 +3,8 @@ import { searchUserController, userLoginController, userRegisterController } fro
 import { createPageController, exportPDFController, getDataByPageIdController, getPagesByUserIdController } from '../controller/page.controller.js';
 import { addUser2PageController, getColabPageController } from '../controller/colab.controller.js';
 import { askAIController } from '../controller/askai.controller.js';
+import { uploadImageController } from '../controller/file.controller.js';
+import multer from 'multer';
 /** define route */
 const route = express.Router();
 
@@ -25,4 +27,7 @@ route.post('/add-user-to-page', addUser2PageController);
 route.get('/get-colab-pages/:userId', getColabPageController);
 
 route.get('/get-ai', askAIController);
+/** file */
+const uploads = multer({ dest: 'tmp/', limits: { fileSize: 50 * 1024 * 1024 } });
+route.post('/upload', uploadImageController);
 export default route;
