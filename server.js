@@ -10,6 +10,7 @@ import Delta from 'quill-delta';
 import { askAIController } from './src/controller/askai.controller.js';
 import connection from './src/config/db.config.js';
 import fileUpload from 'express-fileupload';
+import { uploadCloudinaryController, uploadImageController } from './src/controller/file.controller.js';
 
 const page = {
   data: new Delta([]),
@@ -29,7 +30,7 @@ connection();
 
 // config
 app.use(express.json());
-app.use(fileUpload())
+app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // REST
@@ -141,6 +142,14 @@ io.on('connection', (socket) => {
     } catch (error) {
       console.error(error);
     }
+  });
+
+  /** upload */
+  socket.on('upload', async ({ file, filename, pageId }) => {
+    console.log({ file, filename });
+    const response = await uploadCloudinaryController(file);
+    console.log(response);
+    io.timeout(300).to(pageId).emit('upload', { imageURL: response });
   });
 
   /**
