@@ -2,17 +2,17 @@ import OpenAI from 'openai';
 /**
  * controller call openai service through openai api key
  */
-const apiKey = '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';
+const apiKey = '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';
 const openai = new OpenAI({
   apiKey: apiKey,
 });
 
-export const askAIController = async (prompt) => {
+export const askAIController = async (prompt, role) => {
   try {
     const getResponse = async () => {
       try {
         const rs = await openai.chat.completions.create({
-          messages: [{ role: 'user', content: prompt }],
+          messages: [{ role: role, content: prompt }],
           model: 'gpt-3.5-turbo',
         });
         return rs.choices[0].message;

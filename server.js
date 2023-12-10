@@ -126,10 +126,10 @@ io.on('connection', (socket) => {
   });
 
   /** message with AI */
-  socket.on(ACTIONS.SEND_MESSAGE, async ({ message, sessionId }) => {
-    console.log(message);
+  socket.on(ACTIONS.SEND_MESSAGE, async ({ messageSending }) => {
+    const { content, role, sessionId } = messageSending;
     /** calling ai service */
-    const response = await askAIController(message);
+    const response = await askAIController(content, role);
     console.log(response);
     io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { response, sessionId });
   });
