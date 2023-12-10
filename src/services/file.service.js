@@ -34,10 +34,11 @@ export const uploadImageService = async (file, filename) => {
 /** with cloudinary */
 export const uploadCloudinary = async (file) => {
   try {
-    const rs = await new Promise((resolve) => {
+    const rs = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream((error, result) => {
-          return resolve(result);
+          if (result) return resolve(result);
+          else return reject(error);
         })
         .end(file);
     });
