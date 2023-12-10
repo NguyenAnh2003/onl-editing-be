@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 /**
  * controller call openai service through openai api key
  */
-const apiKey = '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';
+const apiKey = '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';
 const openai = new OpenAI({
   apiKey: apiKey,
 });
