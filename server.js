@@ -86,9 +86,9 @@ io.on('connection', (socket) => {
         .emit(ACTIONS.JOINED, {
           clients,
           userJoined: {
-            color: randomColor(),
             socketId,
             name,
+            color: randomColor(),
             userId,
           },
           // data,
@@ -137,9 +137,16 @@ io.on('connection', (socket) => {
   /** upload */
   socket.on('upload', async ({ file, filename, pageId }) => {
     console.log({ file, filename });
-    const response = await uploadCloudinaryController(file);
-    console.log(response);
-    io.timeout(300).to(pageId).emit('upload', { imageURL: response });
+    // const imageURL = await uploadCloudinaryController(file);
+    // console.log(imageURL);
+    const imageURL = 'https://res.cloudinary.com/drijaswh2/image/upload/v1702303468/qgoty8dx8byqarp3wvjh.png';
+    io.timeout(300).to(pageId).emit('upload', { imageURL });
+  });
+
+  /** send image and receive */
+  socket.on('send-image', ({ imageURL, userId, pageId, sessionId }) => {
+    console.log(sessionId);
+    socket.in(pageId).timeout(300).emit('send-image', { imageURL, userId, sessionId });
   });
 
   /** leave room */
