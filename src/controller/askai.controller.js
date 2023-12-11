@@ -1,10 +1,9 @@
 import OpenAI from 'openai';
-/**
- * controller call openai service through openai api key
- */
-const apiKey = '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';
+import dotenv from 'dotenv';
+dotenv.config();
+/** controller call openai service through openai api key*/
 const openai = new OpenAI({
-  apiKey: apiKey,
+  apiKey: process.env.OPENAI_KEY,
 });
 
 export const askAIController = async (prompt, role) => {

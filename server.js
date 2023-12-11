@@ -142,6 +142,11 @@ io.on('connection', (socket) => {
     io.timeout(300).to(pageId).emit('upload', { imageURL: response });
   });
 
+  /** leave room */
+  socket.on(ACTIONS.LEAVE_ROOM, ({ pageId, sessionId }) => {
+    console.log(pageId, sessionId);
+  });
+
   /**
    * disconnect
    */
