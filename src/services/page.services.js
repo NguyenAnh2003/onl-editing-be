@@ -59,12 +59,11 @@ export const exportPDFService = async (delta, filename) => {
        * passing buffer to uploadPDF service
        * to get URL
        */
-      pdf.create(html, { format: 'A4' }).toFile(`./tmp/${filename}.pdf`, async (err, res) => {
+      pdf.create(html, { format: 'A4' }).toBuffer(async (err, res) => {
         if (err) {
           reject(err);
         } else {
-          const buffer = await fs.promises.readFile(res.filename);
-          const result = await uploadPdfService(buffer, `${filename}.pdf`);
+          const result = await uploadPdfService(res, `${filename}.pdf`);
           resolve(result);
         }
       });
