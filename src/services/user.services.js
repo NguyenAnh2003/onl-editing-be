@@ -1,6 +1,5 @@
 import User from '../schema/user.schema.js';
 import bcrypt from 'bcryptjs';
-import { createAccessToken } from './authentication.service.js';
 
 /** authentication service */
 export const userLoginService = async (name, password) => {
@@ -12,7 +11,6 @@ export const userLoginService = async (name, password) => {
         return {
           userId: user._id,
           username: user.name,
-          token: createAccessToken(user),
         };
       } else return;
     } else {
