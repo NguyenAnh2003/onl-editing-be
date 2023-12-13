@@ -4,7 +4,8 @@ export const userLoginController = async (req, res) => {
   const { name, password } = req.body;
   try {
     const rs = await userLoginService(name, password);
-    res.status(200).send(rs);
+    if (rs) res.status(200).send(rs);
+    else res.status(401).send('Invalid name or password');
   } catch (error) {
     console.error(error);
   }
@@ -12,9 +13,11 @@ export const userLoginController = async (req, res) => {
 
 export const userRegisterController = async (req, res) => {
   const { name, password } = req.body;
+  console.log(name, password);
   try {
     const rs = await userRegisterService(name, password);
-    res.status(200).send(rs);
+    if (rs) res.status(200).send(rs);
+    else res.status(400).send('BAD REQUEST');
   } catch (error) {
     console.error(error);
   }
