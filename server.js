@@ -100,16 +100,19 @@ io.on('connection', (socket) => {
   });
 
   /** text change*/
-  socket.on(ACTIONS.TEXT_CHANGE, ({ roomId, content, client }) => {
+  socket.on(ACTIONS.TEXT_CHANGE, ({ requestData }) => {
     /**
      * return roomId, text, client
      * Socket send text change
      * Check username with senderClient
+     * decrypt data
      */
+    const { roomId, content, client } = decryptHelper(requestData);
     page.data = page.data.compose(new Delta(content));
     page.history.push(content);
-
-    socket.timeout(300).in(roomId).emit(ACTIONS.TEXT_CHANGE, { content, client });
+    /** encrypt response */
+    const responseData = encryptHelper({ content, client });
+    socket.timeout(300).in(roomId).emit(ACTIONS.TEXT_CHANGE, { responseData });
     console.log({ roomId, content, client });
 
     setTimeout(async () => {
