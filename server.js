@@ -63,7 +63,8 @@ const getAllConnected = (roomId) => {
 io.on('connection', (socket) => {
   console.log(`${socket.id} connected`);
   /** on Connection */
-  socket.on(ACTIONS.JOIN, async ({ roomId, name, userId }) => {
+  socket.on(ACTIONS.JOIN, async ({ requestData }) => {
+    const { roomId, name, userId } = decryptHelper(requestData);
     /**
      * RoomId -> SpaceId
      * Document -> Space editing
@@ -81,22 +82,20 @@ io.on('connection', (socket) => {
 
     /** @emits clients, name, socketId, color, userId*/
     clients.forEach(({ socketId }) => {
-      console.log(data);
-      io.to(socketId)
-        .timeout(300)
-        .emit(ACTIONS.JOINED, {
-          clients,
-          userJoined: {
-            color: randomColor(),
-            socketId,
-            name,
-            userId,
-          },
-          // data,
-        });
+      const userJoined = {
+        color: randomColor(),
+        socketId,
+        name,
+        userId,
+      };
+      const responseData = encryptHelper({ clients, userJoined });
+      io.to(socketId).timeout(300).emit(ACTIONS.JOINED, {
+        responseData,
+      });
     });
-
-    io.in(roomId).emit(ACTIONS.LOAD_DOC, { data });
+    console.log(data);
+    const responseData = encryptHelper(data);
+    io.in(roomId).emit(ACTIONS.LOAD_DOC, { responseData });
   });
 
   /** text change*/
@@ -122,10 +121,12 @@ io.on('connection', (socket) => {
   });
 
   /** cursor change */
-  socket.on(ACTIONS.CURSOR_CHANGE, ({ roomId, socketId, selection }) => {
+  socket.on(ACTIONS.CURSOR_CHANGE, ({ requestData }) => {
+    const { roomId, socketId, selection } = decryptHelper(requestData);
     if (selection) {
       console.log({ selection });
-      socket.in(roomId).emit(ACTIONS.CURSOR_CHANGE, { socketId, selection });
+      const responseData = encryptHelper({ socketId, selection });
+      socket.in(roomId).emit(ACTIONS.CURSOR_CHANGE, { responseData });
     }
   });
 
@@ -160,9 +161,9 @@ io.on('connection', (socket) => {
   socket.on('disconnecting', () => {
     const rooms = [...socket.rooms];
     rooms.forEach((roomId) => {
+      const responseData = encryptHelper({ socketId: socket.id, name: userSocketMap[socket.id] });
       socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
-        socketId: socket.id,
-        name: userSocketMap[socket.id],
+        responseData,
       });
       console.log('before leave', userSocketMap[socket.id]);
       // delete userSocketMap[socket.id];
