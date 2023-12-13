@@ -11,6 +11,7 @@ import { askAIController } from './src/controller/askai.controller.js';
 import connection from './src/config/db.config.js';
 import fileUpload from 'express-fileupload';
 import { uploadCloudinaryController, uploadImageController } from './src/controller/file.controller.js';
+import { decryptHelper, encryptHelper } from './src/utils/cipher.utils.js';
 
 const page = {
   data: new Delta([]),
@@ -126,12 +127,15 @@ io.on('connection', (socket) => {
   });
 
   /** message with AI */
-  socket.on(ACTIONS.SEND_MESSAGE, async ({ messageSending }) => {
-    const { content, role, sessionId } = messageSending;
+  socket.on(ACTIONS.SEND_MESSAGE, async ({ requestData }) => {
+    const { content, role, sessionId } = decryptHelper(requestData);
+    console.log(content, role, sessionId);
+
     /** calling ai service */
     const response = await askAIController(content, role);
     console.log(response);
-    io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { response, sessionId });
+    const responseData = encryptHelper({ response, sessionId });
+    io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { responseData });
   });
 
   /** upload */
