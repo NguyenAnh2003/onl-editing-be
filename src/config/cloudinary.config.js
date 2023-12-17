@@ -1,4 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv'
+
+/** env variables config */
+dotenv.config()
 
 cloudinary.config({
   cloud_name: 'drijaswh2',
