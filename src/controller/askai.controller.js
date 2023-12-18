@@ -19,14 +19,8 @@ export const askAIController = async (prompt, role) => {
         console.error(error);
       }
     };
-
     const result = await getResponse(prompt);
-
-    if (result) {
-      return result;
-    } else {
-      return;
-    }
+    return result ? result : null;
   } catch (error) {
     console.error(error);
   }
