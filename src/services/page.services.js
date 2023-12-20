@@ -1,7 +1,6 @@
 import Page from '../schema/page.schema.js';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import pdf from 'html-pdf';
-import fs from 'fs';
 import { uploadPdfService } from './file.service.js';
 import Colab from '../schema/colabs.schema.js';
 /** REST */
