@@ -3,6 +3,7 @@ import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import pdf from 'html-pdf';
 import fs from 'fs';
 import { uploadPdfService } from './file.service.js';
+import Colab from '../schema/colabs.schema.js';
 /** REST */
 export const createPageService = async (userId, pageName) => {
   try {
@@ -45,11 +46,26 @@ export const getDataByPageIdService = async (pageId) => {
 
 /** delete page */
 export const deletePage = async (id) => {
+  /**
+   * delete page by pageId
+   * delete colabs {
+   * 1. searching for colab
+   * 2. if else colab result
+   * 3. delete colab if result
+   * }
+   * if (pageResult || (pageResult && colabResult)) return rs
+   */
   try {
-    const result = Page.deleteOne({ _id: id });
+    const colabPages = await Colab.find({ pageId: id });
+    if (colabPages) {
+      const clResult = await Colab.deleteMany({ pageId: id });
+      const result = await Page.deleteOne({ _id: id });
+      if (clResult && result) return { clResult, result };
+    } else {
+      const result = await Page.deleteOne({ _id: id });
+      if (result) return result;
+    }
     console.log('delete service', result);
-    if (result) return result;
-    else return null;
   } catch (error) {
     throw new Error(error);
   }
