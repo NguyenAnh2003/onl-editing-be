@@ -43,6 +43,18 @@ export const getDataByPageIdService = async (pageId) => {
   return page;
 };
 
+/** delete page */
+export const deletePage = async (id) => {
+  try {
+    const result = Page.deleteOne({ _id: id });
+    console.log('delete service', result);
+    if (result) return result;
+    else return null;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 /** Ws update content */
 export const updatePage = async (id, data) => {
   return await Page.findByIdAndUpdate(id, { $set: { content: data } }, { new: true });

@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import { createPageService, exportPDFService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
+import { createPageService, deletePage, exportPDFService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
 import { decryptHelper, encryptHelper } from '../utils/cipher.utils.js';
 
 export const createPageController = async (req, res) => {
@@ -36,18 +35,33 @@ export const getDataByPageIdController = async (req, res) => {
 /** export pdf file */
 export const exportPDFController = async (req, res) => {
   const { encryptedRequest } = req.body;
+  console.log(decryptHelper(encryptedRequest));
   const { delta, filename } = decryptHelper(encryptedRequest);
   try {
     /** pdf service */
     const url = await exportPDFService(delta, filename);
     if (url) {
       const encryptedResponse = encryptHelper(url);
-      console.log(encryptedResponse);
       res.status(200).send(encryptedResponse);
     } else {
       res.status(500).send('Error exporting pdf file');
     }
   } catch (error) {
     console.error(error);
+  }
+};
+
+/** update Page controller */
+
+/** delete page controller */
+export const deletePageController = async (req, res) => {
+  try {
+    const { pageId } = req.params;
+    console.log(pageId);
+    const rs = await deletePage(pageId);
+    console.log(rs);
+    if (rs) res.status(200).send('Delete successfully');
+  } catch (error) {
+    res.status(500).send('Cannot delete page');
   }
 };
