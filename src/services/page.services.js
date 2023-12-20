@@ -61,11 +61,12 @@ export const deletePage = async (id) => {
       const clResult = await Colab.deleteMany({ pageId: id });
       const result = await Page.deleteOne({ _id: id });
       if (clResult && result) return { clResult, result };
+      else return;
     } else {
       const result = await Page.deleteOne({ _id: id });
       if (result) return result;
+      else return;
     }
-    console.log('delete service', result);
   } catch (error) {
     throw new Error(error);
   }
