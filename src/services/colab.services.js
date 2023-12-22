@@ -51,6 +51,15 @@ export const getColabsByPageIdService = async (pageId) => {
   }
 };
 
+export const getOneColabPageService = async (userId, pageId) => {
+  try {
+    const rs = await Colab.findOne({ userId, pageId });
+    return rs;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const updateUserModeService = async (userId, pageId, mode) => {
   try {
     const rs = await Colab.findOneAndUpdate({ userId: userId, pageId: pageId }, { mode: mode }, { new: true });

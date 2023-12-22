@@ -1,4 +1,4 @@
-import { addUser2PageService, getColabPageService, getColabsByPageIdService, updateUserModeService } from '../services/colab.services.js';
+import { addUser2PageService, getColabPageService, getColabsByPageIdService, getOneColabPageService, updateUserModeService } from '../services/colab.services.js';
 
 /** addU2Pge */
 export const addUser2PageController = async (req, res) => {
@@ -45,13 +45,14 @@ export const getColabPageByPageIdController = async (req, res) => {
 
 /** getOneColabPage */
 export const getOneColabPageController = async (req, res) => {
-  const {pageId, userId} = req.params;
+  const { pageId, userId } = req.params;
   try {
-    
+    const rs = await getOneColabPageService(userId, pageId);
+    if (rs) res.status(200).send(rs);
   } catch (error) {
-    // res.status()
+    res.status(500).send('Internal error');
   }
-}
+};
 
 /** update mode */
 export const updateUserModeController = async (req, res) => {
