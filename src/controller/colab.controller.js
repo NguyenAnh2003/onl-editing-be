@@ -59,9 +59,11 @@ export const updateUserModeController = async (req, res) => {
   const { userId, pageId, mode, username } = req.body;
   console.log({ userId, pageId, mode, username });
   try {
-    const rs = await updateUserModeService(userId, pageId, mode);
-    console.log(rs);
-    if (rs) res.status(200).send(rs);
+    if (mode !== '' || mode !== ' ') {
+      const rs = await updateUserModeService(userId, pageId, mode);
+      console.log(rs);
+      if (rs) res.status(200).send(rs);
+    } else res.status(400).send('Mode is empty');
   } catch (error) {
     throw new Error(error);
   }
