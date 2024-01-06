@@ -20,6 +20,11 @@ export const uploadPdfService = async (buffer, filename) => {
 
 /** with firebase */
 export const uploadImageService = async (file, filename) => {
+  /**
+   * @param file
+   * @param filename
+   * substring extension for file type
+   */
   try {
     const time = Date.now();
     const storageRef = ref(storage, `medias/${filename + '-' + time}.png`);
@@ -28,6 +33,7 @@ export const uploadImageService = async (file, filename) => {
     return url;
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 

@@ -25,6 +25,7 @@ export const addUser2PageService = async (userId, pageId, username) => {
     }
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -38,6 +39,7 @@ export const getColabPageService = async (userId) => {
     return rs;
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -47,7 +49,7 @@ export const getColabsByPageIdService = async (pageId) => {
     if (rs) return rs;
     else return null;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -56,7 +58,7 @@ export const getOneColabPageService = async (userId, pageId) => {
     const rs = await Colab.findOne({ userId, pageId });
     return rs;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -65,6 +67,6 @@ export const updateUserModeService = async (userId, pageId, mode) => {
     const rs = await Colab.findOneAndUpdate({ userId: userId, pageId: pageId }, { mode: mode }, { new: true });
     return rs;
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };

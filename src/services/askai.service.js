@@ -8,6 +8,7 @@ export const askAIService = async (content, role) => {
   /** Using OpenAi lib for calling response from GPT
    * @param content
    * @param role
+   * using langchainjs can obtain ability of memorizing message list
    */
 
   const openai = new OpenAI({
@@ -25,6 +26,6 @@ export const askAIService = async (content, role) => {
     return await getAiResponse(content);
   } catch (error) {
     console.log('Message from askAI service', error.message);
-    throw new Error(error);
+    throw new Error(error.message);
   }
 };
