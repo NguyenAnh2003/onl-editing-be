@@ -57,7 +57,8 @@ export const getOneColabPageController = async (req, res) => {
 /** update mode */
 export const updateUserModeController = async (req, res) => {
   const { userId, pageId, mode, username } = req.body;
-  console.log({ userId, pageId, mode, username });
+  const { colabId } = req.params;
+  console.log({ colabId, userId, pageId, mode, username });
   try {
     if (mode !== '' || mode !== ' ') {
       const rs = await updateUserModeService(userId, pageId, mode);

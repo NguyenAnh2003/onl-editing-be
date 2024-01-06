@@ -23,5 +23,5 @@ route.post('/add-user-to-page', addUser2PageController);
 route.get('/get-colab-pages/:userId', getColabPageController);
 route.get('/get-colab-pages-pageid/:pageId', getColabPageByPageIdController);
 route.get('/get-one-colab-page/:userId/:pageId', getOneColabPageController);
-route.put('/update-user-mode', updateUserModeController);
+route.put('/update-user-mode/:colabId', updateUserModeController);
 export default route;
