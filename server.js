@@ -5,13 +5,14 @@ import ACTIONS from './actions.js';
 import cors from 'cors';
 import randomColor from 'randomcolor';
 import route from './src/routes/index.route.js';
-import { getDataByPageIdService, updatePage } from './src/services/page.services.js';
+import { getDataByPageIdService, updatePageService } from './src/services/page.services.js';
 import Delta from 'quill-delta';
 import { askAIController } from './src/controller/askai.controller.js';
 import connection from './src/config/db.config.js';
 import fileUpload from 'express-fileupload';
 import { uploadCloudinaryController, uploadImageController } from './src/controller/file.controller.js';
 import { decryptHelper, encryptHelper } from './src/utils/cipher.utils.js';
+import { updatePageController } from './src/controller/page.controller.js';
 
 const page = {
   data: new Delta([]),
@@ -115,7 +116,7 @@ io.on('connection', (socket) => {
     console.log({ roomId, content, client });
 
     setTimeout(async () => {
-      const rs = await updatePage(roomId, page.data);
+      const rs = await updatePageController(roomId, page.data);
       console.log('update', rs);
     }, 300);
   });

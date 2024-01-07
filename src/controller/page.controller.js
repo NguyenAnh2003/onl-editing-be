@@ -1,4 +1,4 @@
-import { createPageService, deletePage, exportPDFService, getDataByPageIdService, getPagesByUserIdService } from '../services/page.services.js';
+import { createPageService, deletePage, exportPDFService, getDataByPageIdService, getPagesByUserIdService, updatePageService } from '../services/page.services.js';
 import { decryptHelper, encryptHelper } from '../utils/cipher.utils.js';
 
 export const createPageController = async (req, res) => {
@@ -51,7 +51,19 @@ export const exportPDFController = async (req, res) => {
   }
 };
 
-/** update Page controller */
+/** update Page controller for WS */
+export const updatePageController = async (id, content) => {
+  /**
+   * @param content
+   * used for WS update
+   */
+  try {
+    const result = await updatePageService(id, content);
+    return result;
+  } catch (error) {
+    throw new Error(error.message); // throw Error can be used for WS
+  }
+};
 
 /** delete page controller */
 export const deletePageController = async (req, res) => {

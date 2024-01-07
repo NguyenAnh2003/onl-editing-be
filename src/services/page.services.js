@@ -3,6 +3,7 @@ import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import pdf from 'html-pdf';
 import { uploadPdfService } from './file.service.js';
 import Colab from '../schema/colabs.schema.js';
+
 /** REST */
 export const createPageService = async (userId, pageName) => {
   try {
@@ -18,6 +19,7 @@ export const createPageService = async (userId, pageName) => {
     return result;
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -33,14 +35,20 @@ export const getPagesByUserIdService = async (userId) => {
     return page;
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 
 /** getPage by pageId used for */
 export const getDataByPageIdService = async (pageId) => {
-  if (!pageId) return;
-  const page = await Page.findById(pageId);
-  return page;
+  try {
+    if (!pageId) return;
+    const page = await Page.findById(pageId);
+    return page;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.message);
+  }
 };
 
 /** delete page */
@@ -72,8 +80,12 @@ export const deletePage = async (id) => {
 };
 
 /** Ws update content */
-export const updatePage = async (id, data) => {
-  return await Page.findByIdAndUpdate(id, { $set: { content: data } }, { new: true });
+export const updatePageService = async (id, data) => {
+  try {
+    return await Page.findByIdAndUpdate(id, { $set: { content: data } }, { new: true });
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 /** export PDF REST */
@@ -98,5 +110,6 @@ export const exportPDFService = async (delta, filename) => {
     });
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };

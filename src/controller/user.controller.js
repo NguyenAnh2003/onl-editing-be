@@ -24,7 +24,8 @@ export const userLoginController = async (req, res) => {
 
 export const userRegisterController = async (req, res) => {
   const { encryptedData } = req.body;
-  const { name, password } = decryptHelper(encryptedData);
+  const decryptedData = decryptHelper(encryptedData);
+  const { name, password } = decryptedData;
   console.log(name, password);
   try {
     const rs = await userRegisterService(name, password);

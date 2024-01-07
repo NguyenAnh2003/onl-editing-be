@@ -1,7 +1,7 @@
 import Colab from '../schema/colabs.schema.js';
 
 /** add user to page */
-export const addUser2PageService = async (userId, pageId) => {
+export const addUser2PageService = async (userId, pageId, username) => {
   /**
    * @param userId
    * @param pageId
@@ -16,6 +16,8 @@ export const addUser2PageService = async (userId, pageId) => {
       const newColab = new Colab({
         pageId: pageId,
         userId: userId,
+        username: username,
+        mode: 'edit',
       });
       const rs = await newColab.save();
       console.log(rs);
@@ -23,6 +25,7 @@ export const addUser2PageService = async (userId, pageId) => {
     }
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -36,5 +39,34 @@ export const getColabPageService = async (userId) => {
     return rs;
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
+  }
+};
+
+export const getColabsByPageIdService = async (pageId) => {
+  try {
+    const rs = await Colab.find({ pageId: pageId });
+    if (rs) return rs;
+    else return null;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const getOneColabPageService = async (userId, pageId) => {
+  try {
+    const rs = await Colab.findOne({ userId, pageId });
+    return rs;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateUserModeService = async (userId, pageId, mode) => {
+  try {
+    const rs = await Colab.findOneAndUpdate({ userId: userId, pageId: pageId }, { mode: mode }, { new: true });
+    return rs;
+  } catch (error) {
+    throw new Error(error.message);
   }
 };

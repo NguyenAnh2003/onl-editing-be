@@ -1,7 +1,7 @@
 import User from '../schema/user.schema.js';
 import bcrypt from 'bcryptjs';
 
-/** authentication service */
+/** login service */
 export const userLoginService = async (name, password) => {
   try {
     const user = await User.findOne({ name: name });
@@ -18,10 +18,11 @@ export const userLoginService = async (name, password) => {
     }
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 
-/** authentication service */
+/** signup service */
 export const userRegisterService = async (name, password) => {
   try {
     const newUser = new User({
@@ -32,6 +33,7 @@ export const userRegisterService = async (name, password) => {
     return { username: user.name, id: user._id };
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };
 
@@ -46,5 +48,6 @@ export const searchUserService = async (name) => {
     };
   } catch (error) {
     console.error(error);
+    throw new Error(error.message);
   }
 };

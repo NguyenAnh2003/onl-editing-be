@@ -5,9 +5,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 cloudinary.config({
-  cloud_name: 'drijaswh2',
-  api_key: '794448472826553',
-  api_secret: 'KDI-CSosleBFViJ8t-DZ8dKXMl4',
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
 });
 
 export default cloudinary;

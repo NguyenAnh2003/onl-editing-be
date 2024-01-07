@@ -25,13 +25,10 @@ const pageSchema = mongoose.Schema(
     content: {
       type: Object,
     },
-    mode: {
-      type: String,
+    createdDate: {
+      type: mongoose.Schema.Types.Date,
+      default: Date.now,
     },
-  },
-  /** Timestamp */
-  {
-    timestamp: true,
   }
 );
 
