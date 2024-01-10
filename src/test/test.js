@@ -13,7 +13,7 @@ dotenv.config(); // config dotenv
 
 const OPENAI_API = process.env.OPENAI_KEY;
 const embeddings = new OpenAIEmbeddings({
-  openAIApiKey: OPENAI_API
+  openAIApiKey: OPENAI_API,
 }); // openai's embedding
 
 // define chatModel with OpenAI API
@@ -65,7 +65,7 @@ const getLLMResponse = async (text) => {
     const result = await retrievalChain.invoke({
       input: text,
     });
-    return result.answer;
+    return { context: result.context, answer: result.answer };
   } catch (error) {
     throw new Error(error.message);
   }
