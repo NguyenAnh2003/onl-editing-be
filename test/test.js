@@ -72,4 +72,4 @@ const getLLMResponse = async (text) => {
 };
 
 // console.log(splitedDoc[0].pageContent.length);
-console.log('Answer:', await getLLMResponse('Road map to AI'));
+console.log('Answer:', await getLLMResponse('Talk about road map to AI with this document'));
