@@ -23,6 +23,7 @@ const chatModel = new ChatOpenAI({
 
 // prompt
 const prompt = ChatPromptTemplate.fromMessages([
+  // prompt with system? pairing with user input
   ['system', 'You are good at writing formally'],
   ['user', '{input}'],
 ]);
