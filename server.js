@@ -138,7 +138,6 @@ io.on('connection', (socket) => {
 
     /** calling ai service */
     const response = await askAIController(content, role);
-    console.log(response);
     const responseData = encryptHelper({ response, sessionId });
     io.to(sessionId).emit(ACTIONS.AI_RESPONSE, { responseData });
   });
