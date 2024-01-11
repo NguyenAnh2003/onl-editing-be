@@ -30,7 +30,9 @@ const embeddings = new OpenAIEmbeddings({
 
 // prompt
 const prompt = ChatPromptTemplate.fromMessages([
-  SystemMessagePromptTemplate.fromTemplate("Give answer to user based on given conversation."),
+  SystemMessagePromptTemplate.fromTemplate(
+    "Give answer formally to user if there is based on given conversation. or else thought to answer"
+  ),  
   new MessagesPlaceholder("history"),
   HumanMessagePromptTemplate.fromTemplate("{input}"),
 ]);
@@ -39,15 +41,15 @@ const prompt = ChatPromptTemplate.fromMessages([
 const memory = new ConversationSummaryBufferMemory({
   llm: model,
   maxTokenLimit: 50,
-  returnMessages: true
+  returnMessages: true,
 });
 
 // add data to memory
-await memory.saveContext({ input: "hi" }, { output: "Hello how can i help you" });
-await memory.saveContext(
-  { input: "My name is Nguyen Anh remember" },
-  { output: "Nice to see you Nguyen Anh, how can i help you today" }
-);
+// await memory.saveContext({ input: "hi" }, { output: "Hello how can i help you" });
+// await memory.saveContext(
+//   { input: "My name is Nguyen Anh remember" },
+//   { output: "Nice to see you Nguyen Anh, how can i help you today" }
+// );
 
 // define history with memory
 // const history = await memory.loadMemoryVariables({});
@@ -55,8 +57,8 @@ await memory.saveContext(
 // console.log("history:", history);
 
 // get message
-// const messages = await memory.chatHistory.getMessages();
-// console.log("Messages:", messages);
+const messages = await memory.chatHistory.getMessages();
+console.log("Messages:", messages);
 
 //
 // const previousSummary = "";
@@ -72,12 +74,15 @@ const chain = new ConversationChain({
 
 const getAiResponse = async (text) => {
   try {
-    const response = await chain.invoke({ input: text });
-    return response;
+    const res1 = await chain.invoke({ input: "hi" });
+    const res2 = await chain.invoke({ input: "My name is Nguyen Anh" });
+    const res3 = await chain.invoke({ input: "Can u tell my name again" });
+    return { res1, res2, res3 };
   } catch (error) {
     console.error(error);
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 };
 
-console.log(await getAiResponse("Can you tell what my name again"));
+console.log(await getAiResponse("Hi"));
+memory.clear();
