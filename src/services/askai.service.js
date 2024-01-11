@@ -13,34 +13,40 @@ import { ConversationChain } from "langchain/chains";
 // dotenv config
 dotenv.config();
 
-// define model
-const model = new ChatOpenAI({
-  openAIApiKey: process.env.OPENAI_KEY,
-});
+const intChain = async () => {
+  // define model
+  const model = new ChatOpenAI({
+    openAIApiKey: process.env.OPENAI_KEY,
+  });
 
-// prompt for generate
-const promptChat = ChatPromptTemplate.fromMessages([
-  // prompt
-  SystemMessagePromptTemplate.fromTemplate(
-    "Give answer formally to user if there is based on given conversation. or else thought to answer"
-  ),
-  new MessagesPlaceholder("history"),
-  HumanMessagePromptTemplate.fromTemplate("{input}"),
-]);
+  // prompt for generate
+  const promptChat = ChatPromptTemplate.fromMessages([
+    // prompt
+    SystemMessagePromptTemplate.fromTemplate(
+      "Give answer formally to user if there is based on given conversation. or else thought to answer"
+    ),
+    new MessagesPlaceholder("history"),
+    HumanMessagePromptTemplate.fromTemplate("{input}"),
+  ]);
 
-// memory for chat
-const memory = new ConversationSummaryBufferMemory({
-  llm: model,
-  maxTokenLimit: 50,
-  returnMessages: true,
-});
+  // memory for chat
+  const memory = new ConversationSummaryBufferMemory({
+    llm: model,
+    maxTokenLimit: 50,
+    returnMessages: true,
+  });
 
-// chain prompt and model
-const chain = new ConversationChain({
-  llm: model,
-  memory: memory,
-  prompt: promptChat,
-});
+  // chain prompt and model
+  const chain = new ConversationChain({
+    llm: model,
+    memory: memory,
+    prompt: promptChat,
+  });
+
+  return chain;
+};
+
+const chain = await intChain(); // define outside function to make this static
 
 export const askAIService = async (content, role) => {
   /** Using OpenAi lib for calling response from GPT
@@ -52,7 +58,6 @@ export const askAIService = async (content, role) => {
   try {
     const getAiResponse = async (text) => {
       const { response } = await chain.invoke({ input: text });
-      console.log("messages", await memory.chatHistory.getMessages());
       return { content: response, role: "assisstant" };
     };
     return await getAiResponse(content);
