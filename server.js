@@ -74,7 +74,6 @@ io.on("connection", (socket) => {
      * Document -> Space editing
      */
 
-    const data = await getDataByPageIdService(roomId);
     const color = randomColor();
     /* Join roomId */
     userSocketMap[socket.id] = { name, userId, color };
@@ -97,9 +96,6 @@ io.on("connection", (socket) => {
         responseData,
       });
     });
-    console.log(data);
-    const responseData = encryptHelper(data);
-    io.in(roomId).emit(ACTIONS.LOAD_DOC, { responseData });
   });
 
   /** text change*/

@@ -9,6 +9,7 @@ import {
 import { ConversationSummaryBufferMemory } from "langchain/memory";
 import dotenv from "dotenv";
 import { ConversationChain } from "langchain/chains";
+import { StringOutputParser } from "@langchain/core/output_parsers";
 
 // dotenv config
 dotenv.config();
@@ -36,11 +37,15 @@ const intChain = async () => {
     returnMessages: true,
   });
 
+  // output parser
+  const output_parser = new StringOutputParser();
+
   // chain prompt and model
   const chain = new ConversationChain({
     llm: model,
     memory: memory,
     prompt: promptChat,
+    outputParser: output_parser
   });
 
   return chain;
