@@ -1,5 +1,12 @@
-import { createPageService, deletePage, exportPDFService, getDataByPageIdService, getPagesByUserIdService, updatePageService } from '../services/page.services.js';
-import { decryptHelper, encryptHelper } from '../utils/cipher.utils.js';
+import {
+  createPageService,
+  deletePage,
+  exportPDFService,
+  getDataByPageIdService,
+  getPagesByUserIdService,
+  updatePageService,
+} from "../services/page.services.js";
+import { decryptHelper, encryptHelper } from "../utils/cipher.utils.js";
 
 export const createPageController = async (req, res) => {
   const { userId, pageName } = req.body;
@@ -26,9 +33,10 @@ export const getDataByPageIdController = async (req, res) => {
   const { pageId } = req.params;
   try {
     const rs = await getDataByPageIdService(pageId);
-    res.status(200).send(rs);
+    if (rs) res.status(200).send(rs);
   } catch (error) {
     console.error(error);
+    res.status(500).send("Cannot get page data");
   }
 };
 
@@ -44,7 +52,7 @@ export const exportPDFController = async (req, res) => {
       const encryptedResponse = encryptHelper(url);
       res.status(200).send(encryptedResponse);
     } else {
-      res.status(500).send('Error exporting pdf file');
+      res.status(500).send("Error exporting pdf file");
     }
   } catch (error) {
     console.error(error);
@@ -72,8 +80,8 @@ export const deletePageController = async (req, res) => {
     console.log(pageId);
     const rs = await deletePage(pageId);
     console.log(rs);
-    if (rs) res.status(200).send('Delete successfully');
+    if (rs) res.status(200).send("Delete successfully");
   } catch (error) {
-    res.status(500).send('Cannot delete page');
+    res.status(500).send("Cannot delete page");
   }
 };
