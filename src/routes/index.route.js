@@ -1,7 +1,7 @@
 import express from 'express';
 import { searchUserController, userLoginController, userRegisterController } from '../controller/user.controller.js';
 import { createPageController, deletePageController, exportPDFController, getDataByPageIdController, getPagesByUserIdController } from '../controller/page.controller.js';
-import { addUser2PageController, getColabPageByPageIdController, getColabPageController, getOneColabPageController, updateUserModeController } from '../controller/colab.controller.js';
+import { addUser2PageController, deletUserColabController, getColabPageByPageIdController, getColabPageController, getOneColabPageController, updateUserModeController } from '../controller/colab.controller.js';
 import { askAIController } from '../controller/askai.controller.js';
 import { uploadImageController } from '../controller/file.controller.js';
 
@@ -24,4 +24,5 @@ route.get('/get-colab-pages/:userId', getColabPageController);
 route.get('/get-colab-pages-pageid/:pageId', getColabPageByPageIdController);
 route.get('/get-one-colab-page/:userId/:pageId', getOneColabPageController);
 route.put('/update-user-mode/:colabId', updateUserModeController);
+route.delete('/delete-user-colab/:colabId', deletUserColabController)
 export default route;

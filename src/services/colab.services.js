@@ -1,4 +1,4 @@
-import Colab from '../schema/colabs.schema.js';
+import Colab from "../schema/colabs.schema.js";
 
 /** add user to page */
 export const addUser2PageService = async (userId, pageId, username) => {
@@ -17,7 +17,7 @@ export const addUser2PageService = async (userId, pageId, username) => {
         pageId: pageId,
         userId: userId,
         username: username,
-        mode: 'edit',
+        mode: "edit",
       });
       const rs = await newColab.save();
       console.log(rs);
@@ -64,8 +64,24 @@ export const getOneColabPageService = async (userId, pageId) => {
 
 export const updateUserModeService = async (userId, pageId, mode) => {
   try {
-    const rs = await Colab.findOneAndUpdate({ userId: userId, pageId: pageId }, { mode: mode }, { new: true });
+    const rs = await Colab.findOneAndUpdate(
+      { userId: userId, pageId: pageId },
+      { mode: mode },
+      { new: true }
+    );
     return rs;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+/** delete user from colab page */
+export const deleteUserFromColabService = async (colabId) => {
+  try {
+    const rs = await Colab.deleteOne({ _id: colabId });
+    console.log(rs);
+    if (rs) return rs;
+    else return;
   } catch (error) {
     throw new Error(error.message);
   }

@@ -1,4 +1,11 @@
-import { addUser2PageService, getColabPageService, getColabsByPageIdService, getOneColabPageService, updateUserModeService } from '../services/colab.services.js';
+import {
+  addUser2PageService,
+  deleteUserFromColabService,
+  getColabPageService,
+  getColabsByPageIdService,
+  getOneColabPageService,
+  updateUserModeService,
+} from "../services/colab.services.js";
 
 /** addU2Pge */
 export const addUser2PageController = async (req, res) => {
@@ -8,8 +15,8 @@ export const addUser2PageController = async (req, res) => {
     if (rs) {
       res.status(200).json(`Success adding to ${pageId}`);
     } else {
-      res.status(404).send('User already exist');
-      console.log('something wrong');
+      res.status(404).send("User already exist");
+      console.log("something wrong");
     }
   } catch (error) {
     console.error(error);
@@ -21,7 +28,7 @@ export const getColabPageController = async (req, res) => {
   const { userId } = req.params;
   try {
     if (!userId) {
-      console.error('userId undefined');
+      console.error("userId undefined");
       return;
     }
     const rs = await getColabPageService(userId);
@@ -38,7 +45,7 @@ export const getColabPageByPageIdController = async (req, res) => {
     const rs = await getColabsByPageIdService(pageId);
     if (rs) res.status(200).send(rs);
   } catch (error) {
-    res.status(500).send('Internal error');
+    res.status(500).send("Internal error");
     throw new Error(error);
   }
 };
@@ -50,7 +57,7 @@ export const getOneColabPageController = async (req, res) => {
     const rs = await getOneColabPageService(userId, pageId);
     if (rs) res.status(200).send(rs);
   } catch (error) {
-    res.status(500).send('Internal error');
+    res.status(500).send("Internal error");
   }
 };
 
@@ -60,12 +67,25 @@ export const updateUserModeController = async (req, res) => {
   const { colabId } = req.params;
   console.log({ colabId, userId, pageId, mode, username });
   try {
-    if (mode !== '' || mode !== ' ') {
+    if (mode !== "" || mode !== " ") {
       const rs = await updateUserModeService(userId, pageId, mode);
       console.log(rs);
       if (rs) res.status(200).send(rs);
-    } else res.status(400).send('Mode is empty');
+    } else res.status(400).send("Mode is empty");
   } catch (error) {
     throw new Error(error);
+  }
+};
+
+/** delete user from colab */
+export const deletUserColabController = async (req, res) => {
+  const { colabId } = req.params;
+  try {
+    const rs = await deleteUserFromColabService(colabId);
+    if (rs) res.status(204).send("YUP")
+    else res.status(404).send("Not found colab record");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal error cannot delete user from this colab");
   }
 };
