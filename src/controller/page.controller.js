@@ -4,7 +4,7 @@ import {
   exportPDFService,
   getDataByPageIdService,
   getPagesByUserIdService,
-  updatePageService,
+  updatePageNameService,
 } from "../services/page.services.js";
 import { decryptHelper, encryptHelper } from "../utils/cipher.utils.js";
 
@@ -56,6 +56,19 @@ export const exportPDFController = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
+  }
+};
+
+/** update page name */
+export const updatePageNameControllter = async (req, res) => {
+  const { pageId } = req.params;
+  const { name } = req.body;
+  try {
+    const rs = await updatePageNameService(pageId, name);
+    if (rs) res.status(200).send("Updated");
+    else res.status(404).send("NOT FOUND");
+  } catch (error) {
+    res.status(500).send("Internal error cannot update name this page");
   }
 };
 

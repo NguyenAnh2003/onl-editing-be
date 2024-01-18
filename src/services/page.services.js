@@ -1,8 +1,8 @@
-import Page from '../schema/page.schema.js';
-import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
-import pdf from 'html-pdf';
-import { uploadPdfService } from './file.service.js';
-import Colab from '../schema/colabs.schema.js';
+import Page from "../schema/page.schema.js";
+import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import pdf from "html-pdf";
+import { uploadPdfService } from "./file.service.js";
+import Colab from "../schema/colabs.schema.js";
 
 /** REST */
 export const createPageService = async (userId, pageName) => {
@@ -11,8 +11,8 @@ export const createPageService = async (userId, pageName) => {
       userId: userId,
       name: pageName,
       /** empty content, mode */
-      mode: '',
-      content: '',
+      mode: "",
+      content: "",
     });
     const result = await page.save();
     /** returning result */
@@ -79,6 +79,16 @@ export const deletePage = async (id) => {
   }
 };
 
+/** update page name */
+export const updatePageNameService = async (id, name) => {
+  try {
+    return await Page.findByIdAndUpdate(id, { $set: { name } }, { new: true });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+};
+
 /** Ws update content */
 export const updatePageService = async (id, data) => {
   try {
@@ -99,7 +109,7 @@ export const exportPDFService = async (delta, filename) => {
        * passing buffer to uploadPDF service
        * to get URL
        */
-      pdf.create(html, { format: 'A4' }).toBuffer(async (err, res) => {
+      pdf.create(html, { format: "A4" }).toBuffer(async (err, res) => {
         if (err) {
           reject(err);
         } else {
